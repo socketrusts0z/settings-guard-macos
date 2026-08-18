@@ -1,0 +1,112 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00100000000000000000001 = {isa = PBXBuildFile; fileRef = F00100000000000000000001; };
+		A00100000000000000000002 = {isa = PBXBuildFile; fileRef = F00100000000000000000002; };
+		A00100000000000000000003 = {isa = PBXBuildFile; fileRef = F00100000000000000000003; };
+		A00100000000000000000004 = {isa = PBXBuildFile; fileRef = F00100000000000000000004; };
+		A00100000000000000000005 = {isa = PBXBuildFile; fileRef = F00200000000000000000001; };
+		A00100000000000000000007 = {isa = PBXBuildFile; fileRef = F00200000000000000000003; };
+		D00100000000000000000001 = {isa = PBXBuildFile; fileRef = F00300000000000000000001; };
+		D00100000000000000000002 = {isa = PBXBuildFile; fileRef = F00300000000000000000002; };
+		D00100000000000000000003 = {isa = PBXBuildFile; fileRef = F00300000000000000000003; };
+		D00100000000000000000004 = {isa = PBXBuildFile; fileRef = F00300000000000000000004; };
+		D00100000000000000000005 = {isa = PBXBuildFile; fileRef = F00200000000000000000001; };
+		D00100000000000000000007 = {isa = PBXBuildFile; fileRef = F00200000000000000000003; };
+		T00100000000000000000001 = {isa = PBXBuildFile; fileRef = F00400000000000000000001; };
+		T00100000000000000000002 = {isa = PBXBuildFile; fileRef = F00300000000000000000002; };
+		T00100000000000000000003 = {isa = PBXBuildFile; fileRef = F00300000000000000000003; };
+		T00100000000000000000004 = {isa = PBXBuildFile; fileRef = F00200000000000000000001; };
+		T00100000000000000000006 = {isa = PBXBuildFile; fileRef = F00200000000000000000003; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		X00100000000000000000001 = {isa = PBXContainerItemProxy; containerPortal = P00100000000000000000001; proxyType = 1; remoteGlobalIDString = N00100000000000000000002; remoteInfo = frictionblockerd; };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		R00100000000000000000001 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FrictionBlocker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		R00100000000000000000002 = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = frictionblockerd; sourceTree = BUILT_PRODUCTS_DIR; };
+		R00100000000000000000003 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FrictionBlockerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F00100000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrictionBlockerApp.swift; sourceTree = "<group>"; };
+		F00100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F00100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		F00100000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonClient.swift; sourceTree = "<group>"; };
+		F00200000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonProtocol.swift; sourceTree = "<group>"; };
+		F00200000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCredential.swift; sourceTree = "<group>"; };
+		F00300000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F00300000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonStateStore.swift; sourceTree = "<group>"; };
+		F00300000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProcessGuard.swift; sourceTree = "<group>"; };
+		F00300000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonService.swift; sourceTree = "<group>"; };
+		F00300000000000000000005 = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.anantchowdhary.frictionblocker.daemon.plist; sourceTree = "<group>"; };
+		F00400000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrictionBlockerTests.swift; sourceTree = "<group>"; };
+		F00500000000000000000001 = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B00300000000000000000001 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		B00300000000000000000002 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		B00300000000000000000003 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G00100000000000000000001 = {isa = PBXGroup; children = (G00100000000000000000002, G00100000000000000000003, G00100000000000000000004, G00100000000000000000005, G00100000000000000000006, F00500000000000000000001, G00100000000000000000007,); sourceTree = "<group>"; };
+		G00100000000000000000002 = {isa = PBXGroup; children = (F00100000000000000000001, F00100000000000000000002, F00100000000000000000003, F00100000000000000000004,); path = App; sourceTree = "<group>"; };
+		G00100000000000000000003 = {isa = PBXGroup; children = (F00200000000000000000001, F00200000000000000000003,); path = Shared; sourceTree = "<group>"; };
+		G00100000000000000000004 = {isa = PBXGroup; children = (F00300000000000000000001, F00300000000000000000002, F00300000000000000000003, F00300000000000000000004, F00300000000000000000005,); path = Daemon; sourceTree = "<group>"; };
+		G00100000000000000000005 = {isa = PBXGroup; children = (F00400000000000000000001,); path = Tests; sourceTree = "<group>"; };
+		G00100000000000000000006 = {isa = PBXGroup; path = Scripts; sourceTree = "<group>"; };
+		G00100000000000000000007 = {isa = PBXGroup; children = (R00100000000000000000001, R00100000000000000000002, R00100000000000000000003,); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		N00100000000000000000001 = {isa = PBXNativeTarget; buildConfigurationList = C00100000000000000000002; buildPhases = (B00200000000000000000001, B00300000000000000000001, B00400000000000000000001,); buildRules = (); dependencies = (X00200000000000000000001,); name = FrictionBlocker; productName = FrictionBlocker; productReference = R00100000000000000000001; productType = "com.apple.product-type.application"; };
+		N00100000000000000000002 = {isa = PBXNativeTarget; buildConfigurationList = C00100000000000000000003; buildPhases = (B00200000000000000000002, B00300000000000000000002, B00400000000000000000002,); buildRules = (); dependencies = (); name = frictionblockerd; productName = frictionblockerd; productReference = R00100000000000000000002; productType = "com.apple.product-type.tool"; };
+		N00100000000000000000003 = {isa = PBXNativeTarget; buildConfigurationList = C00100000000000000000004; buildPhases = (B00200000000000000000003, B00300000000000000000003, B00400000000000000000003,); buildRules = (); dependencies = (); name = FrictionBlockerTests; productName = FrictionBlockerTests; productReference = R00100000000000000000003; productType = "com.apple.product-type.bundle.unit-test"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		P00100000000000000000001 = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1620; LastUpgradeCheck = 1620;}; buildConfigurationList = C00100000000000000000001; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = G00100000000000000000001; productRefGroup = G00100000000000000000007; projectDirPath = ""; projectRoot = ""; targets = (N00100000000000000000001, N00100000000000000000002, N00100000000000000000003,); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B00400000000000000000001 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		B00400000000000000000002 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		B00400000000000000000003 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B00200000000000000000001 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000001, A00100000000000000000002, A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, A00100000000000000000007,); runOnlyForDeploymentPostprocessing = 0; };
+		B00200000000000000000002 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (D00100000000000000000001, D00100000000000000000002, D00100000000000000000003, D00100000000000000000004, D00100000000000000000005, D00100000000000000000007,); runOnlyForDeploymentPostprocessing = 0; };
+		B00200000000000000000003 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (T00100000000000000000001, T00100000000000000000002, T00100000000000000000003, T00100000000000000000004, T00100000000000000000006,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		X00200000000000000000001 = {isa = PBXTargetDependency; target = N00100000000000000000002; targetProxy = X00100000000000000000001; };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C10100000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; GCC_C_LANGUAGE_STANDARD = gnu17; GCC_OPTIMIZATION_LEVEL = 0; MACOSX_DEPLOYMENT_TARGET = 14.0; ONLY_ACTIVE_ARCH = YES; SDKROOT = macosx; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_VERSION = 5.0;}; name = Debug; };
+		C10100000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_NS_ASSERTIONS = NO; GCC_C_LANGUAGE_STANDARD = gnu17; MACOSX_DEPLOYMENT_TARGET = 14.0; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; SWIFT_VERSION = 5.0;}; name = Release; };
+		C10200000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 2; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 2.0; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Debug; };
+		C10200000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 2; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 2.0; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Release; };
+		C10300000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES;}; name = Debug; };
+		C10300000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES;}; name = Release; };
+		C10400000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker.tests; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Debug; };
+		C10400000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker.tests; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C00100000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (C10100000000000000000001, C10100000000000000000002,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		C00100000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (C10200000000000000000001, C10200000000000000000002,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		C00100000000000000000003 = {isa = XCConfigurationList; buildConfigurations = (C10300000000000000000001, C10300000000000000000002,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		C00100000000000000000004 = {isa = XCConfigurationList; buildConfigurations = (C10400000000000000000001, C10400000000000000000002,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = P00100000000000000000001;
+}
