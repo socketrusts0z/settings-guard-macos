@@ -17,14 +17,14 @@ final class FrictionBlockerTests: XCTestCase {
 
     func testDaemonProtocolRoundTrip() throws {
         let request = DaemonRequest(
-            command: .authorizeSettings,
+            command: .setGuardEnabled,
             password: "correct-horse-battery-staple",
-            durationSeconds: 300
+            guardEnabled: false
         )
         let data = try JSONEncoder().encode(request)
         let decoded = try JSONDecoder().decode(DaemonRequest.self, from: data)
-        XCTAssertEqual(decoded.command, .authorizeSettings)
-        XCTAssertEqual(decoded.durationSeconds, 300)
+        XCTAssertEqual(decoded.command, .setGuardEnabled)
+        XCTAssertEqual(decoded.guardEnabled, false)
     }
 
     func testRootStateStoreRoundTrip() throws {
@@ -36,7 +36,7 @@ final class FrictionBlockerTests: XCTestCase {
         let store = DaemonStateStore(fileURL: directory.appendingPathComponent("state.json"))
         let state = PersistentDaemonState(
             credential: nil,
-            authorizedUntil: Date().addingTimeInterval(300),
+            guardEnabled: false,
             failedUnlockAttempts: 2,
             nextUnlockAttempt: Date().addingTimeInterval(4)
         )
@@ -54,8 +54,25 @@ final class FrictionBlockerTests: XCTestCase {
         }
         """
         let state = try JSONDecoder().decode(PersistentDaemonState.self, from: Data(json.utf8))
-        XCTAssertNil(state.authorizedUntil)
+        XCTAssertFalse(state.guardEnabled)
         XCTAssertEqual(state.failedUnlockAttempts, 3)
+    }
+
+    func testTemporaryAuthorizationStateMigratesToGuardEnabled() throws {
+        let credential = try PasswordCredential.create(
+            password: "correct-horse-battery-staple",
+            iterations: 10
+        )
+        let credentialData = try JSONEncoder().encode(credential)
+        let credentialObject = try JSONSerialization.jsonObject(with: credentialData)
+        let legacyState: [String: Any] = [
+            "credential": credentialObject,
+            "authorizedUntil": Date().addingTimeInterval(300).timeIntervalSinceReferenceDate,
+            "failedUnlockAttempts": 0
+        ]
+        let data = try JSONSerialization.data(withJSONObject: legacyState)
+        let state = try JSONDecoder().decode(PersistentDaemonState.self, from: data)
+        XCTAssertTrue(state.guardEnabled)
     }
 
     func testSettingsProcessScanReturnsOnlyPositivePIDs() {

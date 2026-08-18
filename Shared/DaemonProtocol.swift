@@ -6,37 +6,33 @@ enum DaemonConstants {
     static let stateDirectory = "/Library/Application Support/FrictionBlocker"
     static let statePath = stateDirectory + "/daemon-state.json"
     static let systemSettingsPath = "/System/Applications/System Settings.app"
-    static let defaultAuthorizationSeconds: TimeInterval = 5 * 60
-    static let maximumAuthorizationSeconds: TimeInterval = 30 * 60
 }
 
 enum DaemonCommand: String, Codable, Sendable {
     case status
     case initialize
-    case authorizeSettings
-    case lockSettings
+    case setGuardEnabled
 }
 
 struct DaemonRequest: Codable, Sendable {
     let command: DaemonCommand
     var password: String?
-    var durationSeconds: TimeInterval?
+    var guardEnabled: Bool?
 
     init(
         command: DaemonCommand,
         password: String? = nil,
-        durationSeconds: TimeInterval? = nil
+        guardEnabled: Bool? = nil
     ) {
         self.command = command
         self.password = password
-        self.durationSeconds = durationSeconds
+        self.guardEnabled = guardEnabled
     }
 }
 
 struct DaemonStatus: Codable, Equatable, Sendable {
     var initialized: Bool
     var guardActive: Bool
-    var authorizedUntil: Date?
     var nextPasswordAttempt: Date?
     var systemSettingsRunning: Bool
 }

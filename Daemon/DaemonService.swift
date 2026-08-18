@@ -25,7 +25,6 @@ final class DaemonService {
     }
 
     func start() throws {
-        expireAuthorizationIfNeeded()
         try stateStore.save(state)
         if isGuardActive {
             settingsGuard.terminateSystemSettings()
@@ -35,9 +34,7 @@ final class DaemonService {
     }
 
     private var isGuardActive: Bool {
-        guard state.credential != nil else { return false }
-        guard let authorizedUntil = state.authorizedUntil else { return true }
-        return Date() >= authorizedUntil
+        state.credential != nil && state.guardEnabled
     }
 
     private func startSocket() throws {
@@ -84,9 +81,6 @@ final class DaemonService {
         timer.schedule(deadline: .now(), repeating: .milliseconds(250), leeway: .milliseconds(50))
         timer.setEventHandler { [weak self] in
             guard let self else { return }
-            if expireAuthorizationIfNeeded() {
-                try? stateStore.save(state)
-            }
             if isGuardActive {
                 settingsGuard.terminateSystemSettings()
             }
@@ -131,10 +125,6 @@ final class DaemonService {
 
     private func process(_ request: DaemonRequest) -> DaemonResponse {
         do {
-            if expireAuthorizationIfNeeded() {
-                try stateStore.save(state)
-            }
-
             switch request.command {
             case .status:
                 break
@@ -147,16 +137,27 @@ final class DaemonService {
                     return failure("A guard password is required.")
                 }
                 state.credential = try PasswordCredential.create(password: password)
-                state.authorizedUntil = nil
+                state.guardEnabled = true
                 state.failedUnlockAttempts = 0
                 state.nextUnlockAttempt = nil
                 try stateStore.save(state)
                 settingsGuard.terminateSystemSettings()
 
-            case .authorizeSettings:
+            case .setGuardEnabled:
                 guard let credential = state.credential else {
                     return failure("Configure a guard password first.")
                 }
+                guard let guardEnabled = request.guardEnabled else {
+                    return failure("The requested guard state is missing.")
+                }
+
+                if guardEnabled {
+                    state.guardEnabled = true
+                    try stateStore.save(state)
+                    settingsGuard.terminateSystemSettings()
+                    break
+                }
+
                 if let nextAttempt = state.nextUnlockAttempt, Date() < nextAttempt {
                     return failure("Wait until \(nextAttempt.formatted(date: .omitted, time: .standard)) before trying again.")
                 }
@@ -168,20 +169,10 @@ final class DaemonService {
                     return failure("Incorrect guard password.")
                 }
 
-                let requestedDuration = request.durationSeconds ?? DaemonConstants.defaultAuthorizationSeconds
-                let duration = min(max(requestedDuration, 30), DaemonConstants.maximumAuthorizationSeconds)
-                state.authorizedUntil = Date().addingTimeInterval(duration)
+                state.guardEnabled = false
                 state.failedUnlockAttempts = 0
                 state.nextUnlockAttempt = nil
                 try stateStore.save(state)
-
-            case .lockSettings:
-                guard state.credential != nil else {
-                    return failure("Configure a guard password first.")
-                }
-                state.authorizedUntil = nil
-                try stateStore.save(state)
-                settingsGuard.terminateSystemSettings()
             }
 
             return DaemonResponse(success: true, message: "OK", status: status())
@@ -190,19 +181,10 @@ final class DaemonService {
         }
     }
 
-    @discardableResult
-    private func expireAuthorizationIfNeeded() -> Bool {
-        guard let authorizedUntil = state.authorizedUntil,
-              Date() >= authorizedUntil else { return false }
-        state.authorizedUntil = nil
-        return true
-    }
-
     private func status() -> DaemonStatus {
         DaemonStatus(
             initialized: state.credential != nil,
             guardActive: isGuardActive,
-            authorizedUntil: state.authorizedUntil,
             nextPasswordAttempt: state.nextUnlockAttempt,
             systemSettingsRunning: settingsGuard.isSystemSettingsRunning()
         )

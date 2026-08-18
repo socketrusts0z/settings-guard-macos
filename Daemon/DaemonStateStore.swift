@@ -3,32 +3,32 @@ import Foundation
 
 struct PersistentDaemonState: Codable, Equatable, Sendable {
     var credential: PasswordCredential?
-    var authorizedUntil: Date?
+    var guardEnabled: Bool
     var failedUnlockAttempts: Int
     var nextUnlockAttempt: Date?
 
     static let initial = PersistentDaemonState(
         credential: nil,
-        authorizedUntil: nil,
+        guardEnabled: false,
         failedUnlockAttempts: 0,
         nextUnlockAttempt: nil
     )
 
     private enum CodingKeys: String, CodingKey {
         case credential
-        case authorizedUntil
+        case guardEnabled
         case failedUnlockAttempts
         case nextUnlockAttempt
     }
 
     init(
         credential: PasswordCredential?,
-        authorizedUntil: Date?,
+        guardEnabled: Bool,
         failedUnlockAttempts: Int,
         nextUnlockAttempt: Date?
     ) {
         self.credential = credential
-        self.authorizedUntil = authorizedUntil
+        self.guardEnabled = guardEnabled
         self.failedUnlockAttempts = failedUnlockAttempts
         self.nextUnlockAttempt = nextUnlockAttempt
     }
@@ -36,7 +36,10 @@ struct PersistentDaemonState: Codable, Equatable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         credential = try container.decodeIfPresent(PasswordCredential.self, forKey: .credential)
-        authorizedUntil = try container.decodeIfPresent(Date.self, forKey: .authorizedUntil)
+        // Older releases stored a temporary `authorizedUntil` value. On upgrade,
+        // return to the safer guarded state instead of preserving temporary access.
+        guardEnabled = try container.decodeIfPresent(Bool.self, forKey: .guardEnabled)
+            ?? (credential != nil)
         failedUnlockAttempts = try container.decodeIfPresent(Int.self, forKey: .failedUnlockAttempts) ?? 0
         nextUnlockAttempt = try container.decodeIfPresent(Date.self, forKey: .nextUnlockAttempt)
     }

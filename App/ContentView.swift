@@ -16,8 +16,8 @@ struct ContentView: View {
                     setupView
                 case .guarded:
                     guardedView
-                case .authorized:
-                    authorizedView
+                case .unguarded:
+                    unguardedView
                 case .unavailable:
                     unavailableView
                 }
@@ -28,9 +28,9 @@ struct ContentView: View {
 
     private var header: some View {
         HStack(spacing: 16) {
-            Image(systemName: model.phase == .authorized ? "gearshape.fill" : "lock.shield.fill")
+            Image(systemName: model.phase == .unguarded ? "gearshape.fill" : "lock.shield.fill")
                 .font(.system(size: 38))
-                .foregroundStyle(model.phase == .authorized ? Color.orange : Color.accentColor)
+                .foregroundStyle(model.phase == .unguarded ? Color.orange : Color.accentColor)
             VStack(alignment: .leading, spacing: 3) {
                 Text("Settings Guard")
                     .font(.largeTitle.bold())
@@ -88,12 +88,12 @@ struct ContentView: View {
 
             GroupBox("Open System Settings") {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("Enter the guard password to permit System Settings for five minutes.")
+                    Text("Enter the guard password to disable protection. It will remain disabled until you turn it back on.")
                         .foregroundStyle(.secondary)
 
                     SecureField("Settings Guard password", text: $model.guardPassword)
                         .textFieldStyle(.roundedBorder)
-                        .onSubmit { model.authorizeAndOpenSettings() }
+                        .onSubmit { model.disableGuardAndOpenSettings() }
 
                     if let date = model.daemonStatus?.nextPasswordAttempt,
                        !model.canAttemptPassword {
@@ -102,10 +102,16 @@ struct ContentView: View {
                             .foregroundStyle(.orange)
                     }
 
-                    Button("Authorize and open System Settings") {
-                        model.authorizeAndOpenSettings()
-                    }
-                    .buttonStyle(.borderedProminent)
+                    Toggle(
+                        "Block System Settings",
+                        isOn: Binding(
+                            get: { true },
+                            set: { enabled in
+                                if !enabled { model.disableGuardAndOpenSettings() }
+                            }
+                        )
+                    )
+                    .toggleStyle(.switch)
                     .disabled(model.guardPassword.isEmpty || !model.canAttemptPassword || model.isBusy)
                 }
                 .padding(8)
@@ -115,21 +121,32 @@ struct ContentView: View {
         }
     }
 
-    private var authorizedView: some View {
+    private var unguardedView: some View {
         VStack(alignment: .leading, spacing: 18) {
             statusBox
 
-            GroupBox("Temporary access") {
+            GroupBox("Settings access enabled") {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text(model.authorizationSummary)
+                    Text("Settings Guard is off")
                         .font(.title3.bold())
 
-                    HStack {
-                        Button("Open System Settings") { model.openSystemSettings() }
-                            .buttonStyle(.borderedProminent)
-                        Button("End access now") { model.lockNow() }
-                            .buttonStyle(.bordered)
-                    }
+                    Text("System Settings will remain accessible until you turn the guard back on, including after restarting your Mac.")
+                        .foregroundStyle(.secondary)
+
+                    Toggle(
+                        "Block System Settings",
+                        isOn: Binding(
+                            get: { false },
+                            set: { enabled in
+                                if enabled { model.enableGuard() }
+                            }
+                        )
+                    )
+                    .toggleStyle(.switch)
+                    .disabled(model.isBusy)
+
+                    Button("Open System Settings") { model.openSystemSettings() }
+                        .buttonStyle(.borderedProminent)
                 }
                 .padding(8)
             }
@@ -142,8 +159,8 @@ struct ContentView: View {
         GroupBox("Privileged guard daemon") {
             HStack {
                 Label(
-                    model.phase == .authorized ? "Temporary access permitted" : "System Settings is guarded",
-                    systemImage: model.phase == .authorized ? "clock.fill" : "checkmark.shield.fill"
+                    model.phase == .unguarded ? "Settings Guard is disabled" : "System Settings is guarded",
+                    systemImage: model.phase == .unguarded ? "lock.open.fill" : "checkmark.shield.fill"
                 )
                 Spacer()
                 Button("Refresh") { model.refreshStatus() }

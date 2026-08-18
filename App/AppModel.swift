@@ -7,7 +7,7 @@ final class AppModel: ObservableObject {
         case loading
         case setup
         case guarded
-        case authorized
+        case unguarded
         case unavailable
     }
 
@@ -34,14 +34,6 @@ final class AppModel: ObservableObject {
     var canAttemptPassword: Bool {
         guard let date = daemonStatus?.nextPasswordAttempt else { return true }
         return now >= date
-    }
-
-    var authorizationSummary: String {
-        guard let authorizedUntil = daemonStatus?.authorizedUntil, authorizedUntil > now else {
-            return "System Settings is guarded"
-        }
-        let remaining = max(0, Int(authorizedUntil.timeIntervalSince(now)))
-        return "Access allowed for \(remaining / 60):\(String(format: "%02d", remaining % 60))"
     }
 
     func refreshStatus() {
@@ -73,7 +65,7 @@ final class AppModel: ObservableObject {
         setupConfirmation = ""
     }
 
-    func authorizeAndOpenSettings() {
+    func disableGuardAndOpenSettings() {
         guard canAttemptPassword else {
             errorMessage = "Wait for the failed-attempt cooldown before trying again."
             return
@@ -82,11 +74,11 @@ final class AppModel: ObservableObject {
         guardPassword = ""
         perform(
             DaemonRequest(
-                command: .authorizeSettings,
+                command: .setGuardEnabled,
                 password: password,
-                durationSeconds: DaemonConstants.defaultAuthorizationSeconds
+                guardEnabled: false
             ),
-            successNotice: "System Settings is available for five minutes."
+            successNotice: "Settings Guard is disabled until you turn it back on."
         ) { [weak self] in
             self?.openSystemSettings()
         }
@@ -96,22 +88,15 @@ final class AppModel: ObservableObject {
         NSWorkspace.shared.open(URL(fileURLWithPath: DaemonConstants.systemSettingsPath))
     }
 
-    func lockNow() {
+    func enableGuard() {
         perform(
-            DaemonRequest(command: .lockSettings),
+            DaemonRequest(command: .setGuardEnabled, guardEnabled: true),
             successNotice: "System Settings Guard is active."
         )
     }
 
     private func tick() {
         now = Date()
-        if phase == .authorized,
-           let authorizedUntil = daemonStatus?.authorizedUntil,
-           now >= authorizedUntil {
-            phase = .guarded
-            daemonStatus?.authorizedUntil = nil
-            daemonStatus?.guardActive = true
-        }
     }
 
     private func perform(
@@ -152,7 +137,7 @@ final class AppModel: ObservableObject {
         } else if status.guardActive {
             phase = .guarded
         } else {
-            phase = .authorized
+            phase = .unguarded
         }
     }
 

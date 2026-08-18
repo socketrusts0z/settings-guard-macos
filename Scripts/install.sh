@@ -63,6 +63,10 @@ fi
 /usr/bin/install -d -m 0700 "${STATE_DIR}"
 /usr/bin/install -m 0755 "${DAEMON_SOURCE}" "${DAEMON_DEST}"
 /usr/bin/install -m 0644 "${PLIST_SOURCE}" "${PLIST_DEST}"
+# A running app keeps executing its old in-memory binary even after the bundle
+# is replaced. Stop it so protocol-changing upgrades cannot leave an old UI
+# talking to the newly installed daemon.
+/usr/bin/pkill -x FrictionBlocker 2>/dev/null || true
 /bin/rm -rf /Applications/FrictionBlocker.app
 /usr/bin/ditto "${APP_SOURCE}" /Applications/FrictionBlocker.app
 /usr/sbin/chown -R root:wheel /Applications/FrictionBlocker.app
