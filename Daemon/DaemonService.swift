@@ -27,14 +27,14 @@ final class DaemonService {
     func start() throws {
         try stateStore.save(state)
         if isGuardActive {
-            settingsGuard.terminateSystemSettings()
+            settingsGuard.terminateProtectedProcesses(blockedApps: state.blockedApps)
         }
         try startSocket()
         startGuardTimer()
     }
 
     private var isGuardActive: Bool {
-        state.credential != nil && state.guardEnabled
+        state.protectionActive(at: Date())
     }
 
     private func startSocket() throws {
@@ -82,7 +82,7 @@ final class DaemonService {
         timer.setEventHandler { [weak self] in
             guard let self else { return }
             if isGuardActive {
-                settingsGuard.terminateSystemSettings()
+                settingsGuard.terminateProtectedProcesses(blockedApps: state.blockedApps)
             }
         }
         timer.resume()
@@ -141,10 +141,12 @@ final class DaemonService {
                 state.failedUnlockAttempts = 0
                 state.nextUnlockAttempt = nil
                 try stateStore.save(state)
-                settingsGuard.terminateSystemSettings()
+                if isGuardActive {
+                    settingsGuard.terminateProtectedProcesses(blockedApps: state.blockedApps)
+                }
 
             case .setGuardEnabled:
-                guard let credential = state.credential else {
+                guard state.credential != nil else {
                     return failure("Configure a guard password first.")
                 }
                 guard let guardEnabled = request.guardEnabled else {
@@ -152,26 +154,66 @@ final class DaemonService {
                 }
 
                 if guardEnabled {
+                    state.schedule.enabled = false
                     state.guardEnabled = true
                     try stateStore.save(state)
-                    settingsGuard.terminateSystemSettings()
+                    settingsGuard.terminateProtectedProcesses(blockedApps: state.blockedApps)
                     break
                 }
 
-                if let nextAttempt = state.nextUnlockAttempt, Date() < nextAttempt {
-                    return failure("Wait until \(nextAttempt.formatted(date: .omitted, time: .standard)) before trying again.")
-                }
-                guard let password = request.password, credential.verifies(password) else {
-                    state.failedUnlockAttempts += 1
-                    let delay = min(pow(2.0, Double(state.failedUnlockAttempts)), 300)
-                    state.nextUnlockAttempt = Date().addingTimeInterval(delay)
-                    try stateStore.save(state)
-                    return failure("Incorrect guard password.")
+                try persistAuthentication {
+                    try $0.disableProtection(using: .password(request.password))
                 }
 
+            case .unlockWithQR:
+                try persistAuthentication {
+                    try $0.disableProtection(using: .qr(request.qrToken))
+                }
+
+            case .configureQR:
+                try persistAuthentication {
+                    try $0.configureQR(token: request.qrToken, password: request.password)
+                }
+
+            case .setSchedule:
+                guard state.credential != nil else {
+                    return failure("Configure a guard password first.")
+                }
+                guard !isGuardActive else {
+                    return failure("Disable FrictionBlocker with your password before editing the schedule.")
+                }
+                guard let schedule = request.schedule, schedule.isValid else {
+                    return failure("Choose different start and end times within a day.")
+                }
+                // Disabling a schedule leaves protection off until enabled manually.
                 state.guardEnabled = false
-                state.failedUnlockAttempts = 0
-                state.nextUnlockAttempt = nil
+                state.schedule = schedule
+                try stateStore.save(state)
+                if isGuardActive {
+                    settingsGuard.terminateProtectedProcesses(blockedApps: state.blockedApps)
+                }
+
+            case .setBlockedApps:
+                guard state.credential != nil else {
+                    return failure("Configure a guard password first.")
+                }
+                guard !isGuardActive else {
+                    return failure("Disable FrictionBlocker before changing the Lockdown app list.")
+                }
+                guard let requestedApps = request.blockedApps, requestedApps.count <= 100 else {
+                    return failure("Choose no more than 100 apps.")
+                }
+                var validatedApps: [BlockedApp] = []
+                var seenPaths = Set<String>()
+                for requestedApp in requestedApps {
+                    guard let app = validatedBlockedApp(at: requestedApp.bundlePath) else {
+                        return failure("One of the selected apps is no longer available or is not a valid macOS app.")
+                    }
+                    if seenPaths.insert(app.bundlePath).inserted {
+                        validatedApps.append(app)
+                    }
+                }
+                state.blockedApps = validatedApps
                 try stateStore.save(state)
             }
 
@@ -181,13 +223,44 @@ final class DaemonService {
         }
     }
 
+    /// Persist failed-attempt cooldowns as well as successful credential changes.
+    private func persistAuthentication(_ action: (inout PersistentDaemonState) throws -> Void) throws {
+        do {
+            try action(&state)
+        } catch {
+            try stateStore.save(state)
+            throw error
+        }
+        try stateStore.save(state)
+    }
+
     private func status() -> DaemonStatus {
         DaemonStatus(
             initialized: state.credential != nil,
             guardActive: isGuardActive,
             nextPasswordAttempt: state.nextUnlockAttempt,
-            systemSettingsRunning: settingsGuard.isSystemSettingsRunning()
+            systemSettingsRunning: settingsGuard.isSystemSettingsRunning(),
+            blockedApps: state.blockedApps,
+            schedule: state.schedule,
+            qrConfigured: state.qrCredential != nil
         )
+    }
+
+    private func validatedBlockedApp(at path: String) -> BlockedApp? {
+        let url = URL(fileURLWithPath: path).resolvingSymlinksInPath().standardizedFileURL
+        guard url.pathExtension.lowercased() == "app",
+              let bundle = Bundle(url: url),
+              let executableURL = bundle.executableURL?.resolvingSymlinksInPath().standardizedFileURL,
+              executableURL.path.hasPrefix(url.path + "/Contents/MacOS/"),
+              FileManager.default.isExecutableFile(atPath: executableURL.path),
+              url.path != "/Applications/FrictionBlocker.app",
+              url.path != DaemonConstants.systemSettingsPath
+        else { return nil }
+
+        let name = (bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)
+            ?? (bundle.object(forInfoDictionaryKey: "CFBundleName") as? String)
+            ?? url.deletingPathExtension().lastPathComponent
+        return BlockedApp(name: name, bundlePath: url.path, executablePath: executableURL.path)
     }
 
     private func failure(_ message: String) -> DaemonResponse {

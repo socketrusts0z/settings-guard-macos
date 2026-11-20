@@ -23,6 +23,9 @@
 		T00100000000000000000003 = {isa = PBXBuildFile; fileRef = F00300000000000000000003; };
 		T00100000000000000000004 = {isa = PBXBuildFile; fileRef = F00200000000000000000001; };
 		T00100000000000000000006 = {isa = PBXBuildFile; fileRef = F00200000000000000000003; };
+		A00100000000000000000009 = {isa = PBXBuildFile; fileRef = F00100000000000000000009; };
+		A00100000000000000000010 = {isa = PBXBuildFile; fileRef = F00100000000000000000010; };
+		T00100000000000000000008 = {isa = PBXBuildFile; fileRef = F00100000000000000000008; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,9 @@
 		F00300000000000000000005 = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.anantchowdhary.frictionblocker.daemon.plist; sourceTree = "<group>"; };
 		F00400000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrictionBlockerTests.swift; sourceTree = "<group>"; };
 		F00500000000000000000001 = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F00100000000000000000008 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeImageFixtures.swift; sourceTree = "<group>"; };
+		F00100000000000000000009 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
+		F00100000000000000000010 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSetupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +62,10 @@
 
 /* Begin PBXGroup section */
 		G00100000000000000000001 = {isa = PBXGroup; children = (G00100000000000000000002, G00100000000000000000003, G00100000000000000000004, G00100000000000000000005, G00100000000000000000006, F00500000000000000000001, G00100000000000000000007,); sourceTree = "<group>"; };
-		G00100000000000000000002 = {isa = PBXGroup; children = (F00100000000000000000001, F00100000000000000000002, F00100000000000000000003, F00100000000000000000004,); path = App; sourceTree = "<group>"; };
+		G00100000000000000000002 = {isa = PBXGroup; children = (F00100000000000000000001, F00100000000000000000002, F00100000000000000000003, F00100000000000000000004, F00100000000000000000009, F00100000000000000000010,); path = App; sourceTree = "<group>"; };
 		G00100000000000000000003 = {isa = PBXGroup; children = (F00200000000000000000001, F00200000000000000000003,); path = Shared; sourceTree = "<group>"; };
 		G00100000000000000000004 = {isa = PBXGroup; children = (F00300000000000000000001, F00300000000000000000002, F00300000000000000000003, F00300000000000000000004, F00300000000000000000005,); path = Daemon; sourceTree = "<group>"; };
-		G00100000000000000000005 = {isa = PBXGroup; children = (F00400000000000000000001,); path = Tests; sourceTree = "<group>"; };
+		G00100000000000000000005 = {isa = PBXGroup; children = (F00400000000000000000001, F00100000000000000000008,); path = Tests; sourceTree = "<group>"; };
 		G00100000000000000000006 = {isa = PBXGroup; path = Scripts; sourceTree = "<group>"; };
 		G00100000000000000000007 = {isa = PBXGroup; children = (R00100000000000000000001, R00100000000000000000002, R00100000000000000000003,); name = Products; sourceTree = "<group>"; };
 /* End PBXGroup section */
@@ -81,9 +87,9 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		B00200000000000000000001 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000001, A00100000000000000000002, A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, A00100000000000000000007,); runOnlyForDeploymentPostprocessing = 0; };
+		B00200000000000000000001 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000001, A00100000000000000000002, A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, A00100000000000000000007, A00100000000000000000009, A00100000000000000000010,); runOnlyForDeploymentPostprocessing = 0; };
 		B00200000000000000000002 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (D00100000000000000000001, D00100000000000000000002, D00100000000000000000003, D00100000000000000000004, D00100000000000000000005, D00100000000000000000007,); runOnlyForDeploymentPostprocessing = 0; };
-		B00200000000000000000003 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (T00100000000000000000001, T00100000000000000000002, T00100000000000000000003, T00100000000000000000004, T00100000000000000000006,); runOnlyForDeploymentPostprocessing = 0; };
+		B00200000000000000000003 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (T00100000000000000000001, T00100000000000000000002, T00100000000000000000003, T00100000000000000000004, T00100000000000000000006, T00100000000000000000008,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -93,8 +99,8 @@
 /* Begin XCBuildConfiguration section */
 		C10100000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; GCC_C_LANGUAGE_STANDARD = gnu17; GCC_OPTIMIZATION_LEVEL = 0; MACOSX_DEPLOYMENT_TARGET = 14.0; ONLY_ACTIVE_ARCH = YES; SDKROOT = macosx; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_VERSION = 5.0;}; name = Debug; };
 		C10100000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_NS_ASSERTIONS = NO; GCC_C_LANGUAGE_STANDARD = gnu17; MACOSX_DEPLOYMENT_TARGET = 14.0; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; SWIFT_VERSION = 5.0;}; name = Release; };
-		C10200000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 2; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 2.0; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Debug; };
-		C10200000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 2; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 2.0; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Release; };
+		C10200000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 4; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_NSCameraUsageDescription = "Scan your chosen QR code or barcode to unlock FrictionBlocker. Camera images stay on your Mac."; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 3.1; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Debug; };
+		C10200000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 4; ENABLE_APP_SANDBOX = NO; ENABLE_HARDENED_RUNTIME = NO; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Settings Guard"; INFOPLIST_KEY_NSCameraUsageDescription = "Scan your chosen QR code or barcode to unlock FrictionBlocker. Camera images stay on your Mac."; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity"; MARKETING_VERSION = 3.1; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Release; };
 		C10300000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES;}; name = Debug; };
 		C10300000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = YES;}; name = Release; };
 		C10400000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.anantchowdhary.frictionblocker.tests; PRODUCT_NAME = "$(TARGET_NAME)";}; name = Debug; };

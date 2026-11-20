@@ -7,7 +7,7 @@ final class SettingsProcessGuard {
         "/Applications/System Preferences.app/Contents/MacOS/System Preferences"
     ]
 
-    func runningProcessIDs() -> [pid_t] {
+    func runningProcessIDs(for executablePaths: Set<String> = protectedExecutablePaths) -> [pid_t] {
         let estimatedCount = max(proc_listallpids(nil, 0), 128)
         var processIDs = [pid_t](repeating: 0, count: Int(estimatedCount) + 32)
         let count = processIDs.withUnsafeMutableBytes { buffer in
@@ -26,7 +26,7 @@ final class SettingsProcessGuard {
                 UInt32(pathBuffer.count)
             )
             guard pathLength > 0 else { return false }
-            return Self.protectedExecutablePaths.contains(String(cString: pathBuffer))
+            return executablePaths.contains(String(cString: pathBuffer))
         }
     }
 
@@ -36,10 +36,20 @@ final class SettingsProcessGuard {
 
     @discardableResult
     func terminateSystemSettings() -> Int {
+        terminateProcesses(at: Self.protectedExecutablePaths)
+    }
+
+    @discardableResult
+    func terminateProcesses(at executablePaths: Set<String>) -> Int {
         var terminated = 0
-        for processID in runningProcessIDs() where kill(processID, SIGKILL) == 0 {
+        for processID in runningProcessIDs(for: executablePaths) where kill(processID, SIGKILL) == 0 {
             terminated += 1
         }
         return terminated
+    }
+
+    func terminateProtectedProcesses(blockedApps: [BlockedApp]) {
+        let paths = Self.protectedExecutablePaths.union(blockedApps.map(\.executablePath))
+        terminateProcesses(at: paths)
     }
 }

@@ -1,6 +1,6 @@
 # Settings Guard
 
-Settings Guard is a free, local macOS friction tool. It requires a long password before allowing **System Settings** to stay open. It does not filter network traffic and does not interfere with iCloud Private Relay.
+Settings Guard is a free, local macOS friction tool. It requires a long password before allowing **System Settings** to stay open. Lockdown also closes a user-selected list of macOS apps while the guard is enabled. It does not filter network traffic and does not interfere with iCloud Private Relay.
 
 It can be useful alongside Screen Time: configure Screen Time content blockers or other limits, then use Settings Guard to add friction to changing those settings. This can help reduce impulsive screen-time changes and make it easier to stick to your limits.
 
@@ -34,15 +34,61 @@ The installer replaces the app and daemon, starts the daemon automatically, and 
 - The root daemon starts automatically at boot.
 - A random 24-character password is generated during first-time setup; passwords shorter than 20 characters are rejected.
 - Only a salted PBKDF2-HMAC-SHA256 verifier is stored. The plaintext password is not saved.
-- With the guard active, the daemon polls the process list every 250 milliseconds and kills System Settings if it appears.
-- A correct password disables the guard with no timer.
+- With the guard active, the daemon polls the process list every 250 milliseconds and kills System Settings or a selected Lockdown app if it appears.
+- Disable the guard with the password to choose apps from the searchable in-app list, then enable it again. Use **Add Apps** for apps outside the usual Applications folders. The selection survives reboot.
+- A correct password disables the guard and its daily schedule with no timer.
 - Re-enabling the guard is immediate and does not require the password.
 - Failed password attempts use an exponential cooldown capped at five minutes.
-- The enabled or disabled state survives app closure, logout, and reboot.
+- The manual state and daily schedule survive app closure, logout, and reboot.
+
+## Daily schedule
+
+Protection defaults to **10 p.m.–6 a.m. every day** in the Mac’s local time zone.
+The root daemon computes protection from the current wall clock, so it works
+with the app closed and catches up after sleep, restart, or time-zone changes.
+The Mac is not woken from sleep solely to enforce protection.
+Start is inclusive and end is exclusive. Customize the start and end times in
+**Daily schedule**, then click **Save Schedule**. Equal times are rejected.
+Existing installations adopt the nightly schedule on this upgrade; the password
+and selected apps are preserved. Outside the window, protection is off.
+
+A password unlock disables protection **and the schedule** until you enable it
+again. Turn the schedule back on after editing apps or times. Manually enabling
+protection also switches to manual mode, keeping protection on until a password
+unlock. This schedule controls FrictionBlocker’s System Settings guard and
+selected apps; it does not toggle Apple Screen Time’s Content & Privacy switch.
+
+## QR code and barcode unlocking
+
+Unlock with your password, then choose **QR or barcode unlock → Set Up Code…**.
+Use **Scan a QR Code or Barcode…** to scan an existing code on a book, product,
+card, sign, or another object. Enter your current password and choose
+**Use This Code** to enroll it. Nothing needs to be generated or printed.
+The camera supports the barcode formats available through Apple's Vision API,
+including QR, Code 128, EAN-13, and UPC-E. Show only one code at a time.
+
+While protection is active, **Scan to Unlock…** accepts the same decoded contents
+as the enrolled code. It performs exactly the same action as a correct password:
+protection and its daily schedule stay disabled until you enable them again.
+The password remains available as a fallback. The contents of a scanned code
+are never opened as a URL or executed.
+
+Only a salted verifier is stored. Short barcode values are hashed before the
+password KDF; password length requirements remain unchanged. Previously enrolled
+generated QR codes continue working. Use **Replace Code…** or
+**Remove Code Unlocking**, authenticated with your password, to change the code.
+Replacement invalidates the previous code. Wrong scans and passwords share
+the same persisted cooldown. Passwords, app lists, and schedules are preserved.
+
+Camera access is requested only when scanning. Frames are processed on the Mac,
+not recorded or uploaded. Capture stops when scanning ends, is cancelled, or
+the app becomes inactive. If access is denied, unlock with your password and
+allow the camera in System Settings → Privacy & Security → Camera.
 
 ## Limitations
 
-- System Settings can flash on screen before the daemon closes it.
+- System Settings or a selected app can flash on screen before the daemon closes it.
+- Lockdown closes the selected macOS app. It does not block its website in a browser or helper processes with different executable paths.
 - Some settings can be changed using Terminal commands without opening System Settings.
 - An administrator can stop the daemon, uninstall it, or bypass it from Recovery mode.
 - This does not protect settings contained inside other apps, such as Safari's own Extensions settings.

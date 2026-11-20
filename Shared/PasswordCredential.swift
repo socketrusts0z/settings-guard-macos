@@ -141,3 +141,44 @@ private extension Data {
         return difference == 0
     }
 }
+
+
+/// An independent, high-entropy credential. The password is never printed in a QR.
+enum QRUnlockToken {
+    static let prefix = "frictionblocker:unlock:v1:"
+
+    static func generate() throws -> String {
+        var bytes = [UInt8](repeating: 0, count: 32)
+        let status = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
+        guard status == errSecSuccess else {
+            throw PasswordCredentialError.randomGenerationFailed(status)
+        }
+        return prefix + bytes.map { String(format: "%02x", $0) }.joined()
+    }
+
+    static func isValid(_ value: String) -> Bool {
+        guard value.hasPrefix(prefix) else { return false }
+        let secret = value.dropFirst(prefix.count)
+        return secret.utf8.count == 64 && secret.utf8.allSatisfy {
+            (48...57).contains($0) || (97...102).contains($0)
+        }
+    }
+}
+
+
+/// Accept the exact decoded contents of an existing QR code or barcode.
+/// Hash short values before the password KDF without changing password policy.
+enum BarcodeUnlockPayload {
+    static let maximumByteCount = 8192
+
+    static func isValid(_ value: String) -> Bool {
+        !value.isEmpty && value.utf8.count <= maximumByteCount
+    }
+
+    static func credentialInput(for value: String) -> String {
+        // Preserve verifiers enrolled by the original generated-QR feature.
+        if QRUnlockToken.isValid(value) { return value }
+        let digest = SHA256.hash(data: Data(value.utf8))
+        return "frictionblocker:barcode:v1:" + digest.map { String(format: "%02x", $0) }.joined()
+    }
+}
