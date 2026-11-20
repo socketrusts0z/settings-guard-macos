@@ -2,9 +2,17 @@
 
 Settings Guard is a free, local macOS friction tool. It requires a long password before allowing **System Settings** to stay open. Lockdown also closes a user-selected list of macOS apps while the guard is enabled. It does not filter network traffic and does not interfere with iCloud Private Relay.
 
-It can be useful alongside Screen Time: configure Screen Time content blockers or other limits, then use Settings Guard to add friction to changing those settings. This can help reduce impulsive screen-time changes and make it easier to stick to your limits.
+A good way to use FrictionBlocker is to block websites in Safari with Screen Time, then enable FrictionBlocker to keep System Settings from opening and make those restrictions harder to change impulsively.
 
 The app is intentionally a best-effort commitment device, not a security boundary. A root LaunchDaemon checks for the System Settings process four times per second. While the guard is enabled, the daemon immediately terminates it. The Settings window may appear briefly before closing.
+
+## Recommended use: block websites in Safari
+
+1. Open **System Settings → Screen Time**, enable Screen Time, and configure its **Content & Privacy** web-content restrictions. Add the websites you want to block to the restricted list. The exact labels vary by macOS version; see [Apple’s guide to web-content restrictions](https://support.apple.com/en-ie/guide/mac-help/mchlbcf0dfe2/mac).
+2. Check in **Safari** that your selected websites are blocked.
+3. Enable **FrictionBlocker**. While protection is active, it closes **System Settings** when you try to open it, adding friction to turning off Screen Time or changing the website restrictions.
+
+Screen Time handles the website blocking; FrictionBlocker guards access to the settings that control it. Keep Screen Time and its content restrictions enabled. FrictionBlocker’s daily schedule controls its Settings guard and selected apps; it does not turn Screen Time’s website restrictions on or off.
 
 ## Requirements
 
