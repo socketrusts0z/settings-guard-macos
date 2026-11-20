@@ -1,5 +1,7 @@
 # Settings Guard
 
+<img src="App/Resources/AppIcon.png" width="128" alt="FrictionBlocker app icon: a lock framed by scan corners">
+
 Settings Guard is a free, local macOS friction tool. It requires a long password before allowing **System Settings** to stay open. Lockdown also closes a user-selected list of macOS apps while the guard is enabled. It does not filter network traffic and does not interfere with iCloud Private Relay.
 
 A good way to use FrictionBlocker is to block websites in Safari with Screen Time, then enable FrictionBlocker to keep System Settings from opening and make those restrictions harder to change impulsively.
@@ -122,3 +124,4 @@ xcodebuild -project FrictionBlocker.xcodeproj -scheme FrictionBlocker \
 xcodebuild -project FrictionBlocker.xcodeproj -scheme FrictionBlockerTests \
   -derivedDataPath .build/TestData CODE_SIGNING_ALLOWED=NO test
 ```
+
